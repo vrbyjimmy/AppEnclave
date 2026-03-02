@@ -1,3 +1,6 @@
+[![License: MIT](https://img.shields.io/badge/licence-mit-blue)](https://opensource.org/license/mit) [![License: MIT](https://img.shields.io/badge/nuget-v1.0-brightgreen)](https://www.nuget.org/packages/AppEnclave)
+
+
 # AppEnclave 🛡️
 
 **A High-Performance Multi-tenant Application Micro-kernel for ASP.NET Core.**
