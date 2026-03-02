@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Examples/" />
+  <Folder Name="/Examples/MasterAndChildApps/">
+    <Project Path="AppEnclave.Examples.ChildApp/AppEnclave.Examples.ChildApp.csproj" Id="080900b9-cff4-4b3e-8f3e-a76ff2bd2933" />
+    <Project Path="AppEnclave.Examples.MasterApp/AppEnclave.Examples.MasterApp.csproj" Id="5460dfc1-0843-4d3d-ab65-1d8c7e848071" />
+  </Folder>
+  <Project Path="AppEnclave/AppEnclave.csproj" />
+</Solution>

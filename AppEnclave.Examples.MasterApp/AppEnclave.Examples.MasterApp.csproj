@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+    <PropertyGroup>
+        <StaticWebAssetsEnabled>false</StaticWebAssetsEnabled>
+    </PropertyGroup>
+
+    <ItemGroup>
+    <ProjectReference Include="..\AppEnclave.Examples.ChildApp\AppEnclave.Examples.ChildApp.csproj" StaticWebAssetsEnabled="false" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
