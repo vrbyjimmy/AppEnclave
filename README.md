@@ -213,10 +213,8 @@ app.Run();
 
 ## 📂 Examples
 
-You can find ready-to-run implementation examples in the [examples folder](./examples).
-
-
-*   **[Basic Modular Monolith](./examples/MasterAndChildApps)** - Simple setup for isolated apps with separate configurations and shared root services.
+*   **[Simple Web app able to run by itself or as an enclave in master app](./AppEnclave.Examples.ChildApp)** - Simple webapp able to run by itself or as an enclave in master app.
+*   **[Basic Modular Monolith](./AppEnclave.Examples.MasterApp)** - Simple setup for isolated apps with separate configurations and shared root services.
 
 
 ## 🛠 Why use AppEnclave?
