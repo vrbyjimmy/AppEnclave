@@ -179,7 +179,8 @@ await builder.Services.AddAppEnclaveAsync(options =>
 await builder.Services.AddAppEnclaveAsync(options =>
 {
     options.UseAuthentication = true;
-    options.Hosts = new[] { "/subapp1" };
+    options.Path = "/subapp1";
+    options.Hosts = new[] { "localhost" };
     options.Plugin = new AppEnclave.Examples.ChildApp.EnclavePlugin();
     options.Name = "AppEnclave.Examples.ChildApp";
     options.EnvironmentName = "SubApp1";
@@ -192,7 +193,8 @@ await builder.Services.AddAppEnclaveAsync(options =>
 await builder.Services.AddAppEnclaveAsync(options =>
 {
     options.UseAuthentication = true;
-    options.Hosts = new[] { "/subapp2" };
+    options.Path = "/subapp2";
+    options.Hosts = new[] { "localhost" };
     options.Plugin = new AppEnclave.Examples.ChildApp.EnclavePlugin();
     options.Name = "AppEnclave.Examples.ChildApp";
     options.EnvironmentName = "SubApp2";
