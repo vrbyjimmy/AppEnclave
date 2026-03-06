@@ -4,9 +4,9 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable> 
-    <Version>1.1.0</Version>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.2.0</Version>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
       <Authors>Jakub Vrbata</Authors>
       <Description>High-performance multi-tenant micro-kernel for ASP.NET Core. Run isolated child apps with private DI and configuration in a single process without ALC.</Description>
       <PackageTags>aspnetcore;modular-monolith;multi-tenancy;dotnet;micro-kernel;di;isolated-hosting</PackageTags>

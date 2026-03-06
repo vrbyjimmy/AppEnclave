@@ -16,6 +16,9 @@ namespace AppEnclave.Examples.ChildApp
             services.AddAuthentication();
             services.AddAuthorization();
 
+            var configSection = configuration.GetSection("ChildOptions");
+            services.Configure<ChildOptions>(configSection);
+
             // add open telemetry only for the master, not for the tenant, to avoid duplicate telemetry when master is also instrumented.
             if (!environment.IsTenant())
             {

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Reflection;
 using AppEnclave;
 using OpenTelemetry.Metrics;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,29 +39,31 @@ await builder.Services.AddAppEnclaveAsync(options =>
     options.Name = "AppEnclave.Examples.ChildApp";
     options.EnvironmentName = "Host";
     options.ContentRoot = builder.Environment.ContentRootPath.Replace("AppEnclave.Examples.MasterApp", "AppEnclave.Examples.ChildApp");
-    options.BinRoot = builder.Environment.ContentRootPath.Replace("AppEnclave.Examples.MasterApp", "AppEnclave.Examples.ChildApp");
+    options.BinRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).Replace("AppEnclave.Examples.MasterApp", "AppEnclave.Examples.ChildApp");
 });
 
 await builder.Services.AddAppEnclaveAsync(options =>
 {
     options.UseAuthentication = true;
-    options.Hosts = new[] { "/subapp1" };
+    options.Path = "/subapp1";
+    options.Hosts = new[] { "localhost" };
     options.Plugin = new AppEnclave.Examples.ChildApp.EnclavePlugin();
     options.Name = "AppEnclave.Examples.ChildApp";
     options.EnvironmentName = "SubApp1";
     options.ContentRoot = builder.Environment.ContentRootPath.Replace("AppEnclave.Examples.MasterApp", "AppEnclave.Examples.ChildApp");
-    options.BinRoot = builder.Environment.ContentRootPath.Replace("AppEnclave.Examples.MasterApp", "AppEnclave.Examples.ChildApp");
+    options.BinRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).Replace("AppEnclave.Examples.MasterApp", "AppEnclave.Examples.ChildApp");
 });
 
 await builder.Services.AddAppEnclaveAsync(options =>
 {
     options.UseAuthentication = true;
-    options.Hosts = new[] { "/subapp2" };
+    options.Path = "/subapp2";
+    options.Hosts = new[] { "localhost" };
     options.Plugin = new AppEnclave.Examples.ChildApp.EnclavePlugin();
     options.Name = "AppEnclave.Examples.ChildApp";
     options.EnvironmentName = "SubApp2";
     options.ContentRoot = builder.Environment.ContentRootPath.Replace("AppEnclave.Examples.MasterApp", "AppEnclave.Examples.ChildApp");
-    options.BinRoot = builder.Environment.ContentRootPath.Replace("AppEnclave.Examples.MasterApp", "AppEnclave.Examples.ChildApp");
+    options.BinRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).Replace("AppEnclave.Examples.MasterApp", "AppEnclave.Examples.ChildApp");
 });
 
 var serviceName = "AppEnclave.Examples.MasterApp";

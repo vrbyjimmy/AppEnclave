@@ -29,7 +29,7 @@ public class TenantsHostedService : IHostedService
                     }
 
                     _tenantServices.Add(hostedService);
-                    await hostedService.StartAsync(cancellationToken);
+                    await hostedService.StartAsync(cancellationToken).ConfigureAwait(false);
                 }
             }
         }
@@ -39,7 +39,7 @@ public class TenantsHostedService : IHostedService
     {
         foreach (var service in _tenantServices)
         {
-            await service.StopAsync(cancellationToken);
+            await service.StopAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

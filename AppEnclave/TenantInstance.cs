@@ -8,5 +8,10 @@ namespace AppEnclave
         public IServiceProvider? Provider { get; set; }
         public bool UseAuthentication { get; set; }
         public bool AllowSubAppsOnSameHost { get; set; }
+        public IEnumerable<string>? Hosts
+        {
+            get => field ??= new List<string>();
+            set;
+        }
     }
 }

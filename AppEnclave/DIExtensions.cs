@@ -23,16 +23,19 @@ namespace AppEnclave
             var options = new AppEnclaveOptions();
             configure(options);
 
-            if (options.Hosts?.Any(x => !string.IsNullOrWhiteSpace(x)) == true)
-            {
-                await registry.RegisterTenantByHostnameAsync(services, options.Hosts, options.Plugin, options.Name,
-                    options.EnvironmentName, options.ContentRoot, options.BinRoot, options.UseAuthentication, options.AllowSubAppsOnSameHost);
-            }
-
             if (!string.IsNullOrWhiteSpace(options.Path))
             {
                 await registry.RegisterTenantByPathAsync(services, options.Path, options.Plugin, options.Name,
-                    options.EnvironmentName, options.ContentRoot, options.BinRoot, options.UseAuthentication, options.AllowSubAppsOnSameHost);
+                    options.EnvironmentName, options.ContentRoot, options.BinRoot, options.UseAuthentication, options.AllowSubAppsOnSameHost, options.Hosts).ConfigureAwait(false);
+            }
+            else if (options.Hosts?.Any(x => !string.IsNullOrWhiteSpace(x)) == true)
+            {
+                await registry.RegisterTenantByHostnameAsync(services, options.Hosts, options.Plugin, options.Name,
+                    options.EnvironmentName, options.ContentRoot, options.BinRoot, options.UseAuthentication, options.AllowSubAppsOnSameHost).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new Exception("Either Path or Hosts must be specified for tenant registration.");
             }
 
             if (!services.Any(s => s.ServiceType == typeof(IHostedService) && s.ImplementationType == typeof(TenantsHostedService)))

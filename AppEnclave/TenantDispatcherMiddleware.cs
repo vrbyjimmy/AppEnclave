@@ -111,7 +111,7 @@ public class TenantDispatcherMiddleware
 
                         try
                         {
-                            await childPipeline(context);
+                            await childPipeline(context).ConfigureAwait(false);
                         }
                         finally
                         {
@@ -212,7 +212,7 @@ public class TenantDispatcherMiddleware
         }
         else
         {
-            await _next(context);
+            await _next(context).ConfigureAwait(false);
         }
     }
 }

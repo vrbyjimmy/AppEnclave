@@ -18,8 +18,15 @@ public class TenantRegistry : ITenantRegistry
 
     private readonly Dictionary<string, TenantInstance> _tenants = new();
 
-    public void Register(string id, RequestDelegate entryPoint, IServiceProvider provider, bool useAuthentication, bool allowSubAppsOnSameHost) =>
-        _tenants[id] = new TenantInstance() { EntryPoint = entryPoint, Provider = provider, UseAuthentication = useAuthentication, AllowSubAppsOnSameHost = allowSubAppsOnSameHost };
+    public void Register(string id, RequestDelegate entryPoint, IServiceProvider provider, bool useAuthentication, bool allowSubAppsOnSameHost, IEnumerable<string>? hosts) =>
+        _tenants[id] = new TenantInstance()
+        {
+            EntryPoint = entryPoint, 
+            Provider = provider, 
+            UseAuthentication = useAuthentication, 
+            AllowSubAppsOnSameHost = allowSubAppsOnSameHost,
+            Hosts = hosts
+        };
     
     public TenantInstanceInfo? GetTenantByPathOrHostName(HttpRequest request)
     {
@@ -29,13 +36,21 @@ public class TenantRegistry : ITenantRegistry
             return new TenantInstanceInfo() { Instance = tenant, Key = string.Empty };
         }
 
-        var key = _tenants.Keys.FirstOrDefault(k => k.Contains("/") && request.Path.StartsWithSegments(k, StringComparison.OrdinalIgnoreCase));
+        var key = _tenants.Keys.FirstOrDefault(k => 
+            k.Contains("/") 
+            && request.Path.StartsWithSegments(k, StringComparison.OrdinalIgnoreCase));
         if (key == null && tenant != null)
         {
             return new TenantInstanceInfo() { Instance = tenant, Key = string.Empty };
         }
 
-        return key != null ? new TenantInstanceInfo() { Instance = _tenants[key], Key = key } : null;
+        if (key != null 
+            && (_tenants[key]?.Hosts.Any() == false || _tenants[key]?.Hosts.Contains(request.Host.Host) == true))
+        {
+            return new TenantInstanceInfo() { Instance = _tenants[key], Key = key };
+        }
+
+        return null;
     }
 
     public IEnumerable<TenantInstance> GetTenants()
@@ -97,18 +112,18 @@ public class TenantRegistry : ITenantRegistry
             options.HttpsPort = 443;
         });
 
-        await plugin.ConfigureServicesAsync(services, environment, configuration);
+        await plugin.ConfigureServicesAsync(services, environment, configuration).ConfigureAwait(false);
 
         var builder = new ApplicationBuilder(services.BuildServiceProvider());
 
-        await plugin.ConfigureAsync(builder, environment);
+        await plugin.ConfigureAsync(builder, environment).ConfigureAwait(false);
 
         builder.Run(async context =>
         {
             var endpoint = context.GetEndpoint();
             if (endpoint != null && endpoint.RequestDelegate != null)
             {
-                await endpoint.RequestDelegate(context);
+                await endpoint.RequestDelegate(context).ConfigureAwait(false);
             }
         });
 
@@ -123,20 +138,20 @@ public class TenantRegistry : ITenantRegistry
         IEnumerable<string> hostnames, ITenantPlugin plugin,
         string name, string environmentName, string contentRootPath, string binDirectory, bool useAuthentication, bool allowSubAppsOnSameHost)    
     {
-        var hostInfo = await CreateRequestDelegateInfoAsync(rootServices, plugin, name, environmentName, contentRootPath, binDirectory);
+        var hostInfo = await CreateRequestDelegateInfoAsync(rootServices, plugin, name, environmentName, contentRootPath, binDirectory).ConfigureAwait(false);
 
         foreach (var hostname in hostnames)
         {
-            Register(hostname, hostInfo.Pipeline, hostInfo.Provider, useAuthentication, allowSubAppsOnSameHost);
+            Register(hostname, hostInfo.Pipeline, hostInfo.Provider, useAuthentication, allowSubAppsOnSameHost, null);
         }
     }
 
     public virtual async Task RegisterTenantByPathAsync(IServiceCollection rootServices,
         string path, ITenantPlugin plugin,
-        string name, string environmentName, string contentRootPath, string binDirectory, bool useAuthentication, bool allowSubAppsOnSameHost)
+        string name, string environmentName, string contentRootPath, string binDirectory, bool useAuthentication, bool allowSubAppsOnSameHost, IEnumerable<string>? hosts)
     {
-        var hostInfo = await CreateRequestDelegateInfoAsync(rootServices, plugin, name, environmentName, contentRootPath, binDirectory);
+        var hostInfo = await CreateRequestDelegateInfoAsync(rootServices, plugin, name, environmentName, contentRootPath, binDirectory).ConfigureAwait(false);
 
-        Register(path, hostInfo.Pipeline, hostInfo.Provider, useAuthentication, allowSubAppsOnSameHost);
+        Register(path, hostInfo.Pipeline, hostInfo.Provider, useAuthentication, allowSubAppsOnSameHost, hosts);
     }
 }
