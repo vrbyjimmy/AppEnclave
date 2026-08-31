@@ -15,11 +15,13 @@ public class TenantsHostedService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        var hashSet = new HashSet<IServiceProvider>();
+
         foreach (var tenant in _registry.GetTenants())
         {
             var tenantProvider = tenant.Provider;
 
-            if (tenantProvider != null)
+            if (tenantProvider != null && hashSet.Add(tenantProvider))
             {
                 foreach (var hostedService in tenantProvider.GetServices<IHostedService>())
                 {
